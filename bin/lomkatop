@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# ChepetskOS System Monitor - lomkatop
+# Мониторинг тремора процессора, пропитой памяти и долгов в ломбарде
+
+trap 'echo -e "\n\033[1;32m[!] Смылись от наряда ППС.\033[0m"; exit 0' SIGINT SIGTERM
+
+while true; do
+    clear
+    LOAD=$(cat /proc/loadavg 2>/dev/null | cut -d' ' -f1)
+    LOAD_INT=${LOAD%.*}
+    [ -z "$LOAD_INT" ] && LOAD_INT=1
+    MEM_TOTAL=$(free -m 2>/dev/null | awk '/Mem:/ {print $2}')
+    MEM_USED=$(free -m 2>/dev/null | awk '/Mem:/ {print $3}')
+    [ -z "$MEM_TOTAL" ] && MEM_TOTAL=1024
+    [ -z "$MEM_USED" ] && MEM_USED=512
+    MEM_PERCENT=$((MEM_USED * 100 / MEM_TOTAL))
+    TREMOR=$((LOAD_INT * 25 + 15))
+    [ "$TREMOR" -gt 100 ] && TREMOR=100
+
+    echo -e "\033[1;31m================== [ LOMKA-TOP v6.66 ] ==================\033[0m"
+    echo -e "\033[1;33m[ТРЕМОР РУК (ЦПУ)]:\033[0m [${TREMOR}%] \033[1;31m$(head -c $((TREMOR / 3)) < /dev/zero | tr '\0' '!')\033[0m"
+    echo -e "\033[1;35m[ПРОПИТО ПАМЯТИ]:  \033[0m [${MEM_PERCENT}%] (${MEM_USED}МБ из ${MEM_TOTAL}МБ)"
+    echo -e "\033[1;36m[ДОЛГ В ЛОМБАРДЕ]: \033[0m $(free -m 2>/dev/null | awk '/Swap:/ {print $3}') МБ заложено до зарплаты"
+    echo -e "\033[1;32m[ВЫБРОС КЧХК]:     \033[0m СИНИЙ ДЫМ НАД 7-М МИКРОРАЙОНОМ (ШТАТНЫЙ РЕЖИМ)"
+    echo -e "\033[1;31m---------------------------------------------------------\033[0m"
+    echo -e "\033[1;37m PID    КТО ШАРИТСЯ         ПРОМИЛЛЕ     ДОЗА    СТАТУС\033[0m"
+    
+    ps -eo pid,user,%cpu,%mem,comm --sort=-%mem 2>/dev/null | head -n 12 | tail -n +2 | while read -r line; do
+        PID=$(echo "$line" | awk '{print $1}')
+        USER=$(echo "$line" | awk '{print $2}')
+        CPU=$(echo "$line" | awk '{print $3}')
+        MEM=$(echo "$line" | awk '{print $4}')
+        CMD=$(echo "$line" | awk '{print $5}')
+        echo -e " $PID  \033[1;33m$USER\033[0m \t   ${CPU}‰ \t${MEM}%   \033[1;31m$CMD\033[0m (ищет дозу)"
+    done
+    
+    echo -e "\033[1;31m---------------------------------------------------------\033[0m"
+    echo -e "\033[1;30m[Нажми Ctrl+C, чтобы сбежать от участкового]\033[0m"
+    sleep 2
+done

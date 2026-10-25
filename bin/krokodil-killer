@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# ChepetskOS Krokodil OOM Killer Daemon
+# Беспощадно отпиливает жирные процессы при нехватке памяти
+
+echo "[*] Krokodil-Killer заступил на дежурство в подъезде..."
+
+while true; do
+    MEM_LINE=$(free 2>/dev/null | grep -i 'mem:')
+    if [ -n "$MEM_LINE" ]; then
+        TOTAL=$(echo "$MEM_LINE" | awk '{print $2}')
+        AVAILABLE=$(echo "$MEM_LINE" | awk '{print $7}')
+        if [ -n "$AVAILABLE" ] && [ "$TOTAL" -gt 0 ]; then
+            PERCENT_AVAIL=$((AVAILABLE * 100 / TOTAL))
+            if [ "$PERCENT_AVAIL" -lt 10 ]; then
+                echo -e "\033[1;31m[☠ KROKODIL-KILLER] НАЧАЛАСЬ ГАНГРЕНА СИСТЕМЫ: Памяти меньше 10%!\033[0m"
+                FAT_PID=$(ps -eo pid,%mem --sort=-%mem 2>/dev/null | head -n 2 | tail -n 1 | awk '{print $1}')
+                if [ -n "$FAT_PID" ] && [ "$FAT_PID" -gt 1 ]; then
+                    FAT_NAME=$(ps -p "$FAT_PID" -o comm= 2>/dev/null)
+                    echo -e "\033[1;31m[☠] Отпиливаем ржавой ножовкой процесс '$FAT_NAME' (PID $FAT_PID)...\033[0m"
+                    kill -9 "$FAT_PID" 2>/dev/null
+                    echo "[+] Труп процесса '$FAT_NAME' успешно сброшен в Чепцу."
+                fi
+            fi
+        fi
+    fi
+    sleep 4
+done

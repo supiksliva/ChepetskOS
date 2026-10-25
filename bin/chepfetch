@@ -12,23 +12,29 @@ C_GREEN="\033[1;32m"
 C_CYAN="\033[1;36m"
 
 USER="$(whoami)"
-HOST="$(hostname 2>/dev/null || echo "podjezd-6")"
+HOST="$(hostname 2>/dev/null || echo "chepetsk-narkologia")"
 UPTIME="$(uptime -p 2>/dev/null | sed 's/up //')"
-[ -z "$UPTIME" ] && UPTIME="3 дня без сна"
+[ -z "$UPTIME" ] && UPTIME="3 дня"
 RAM="$(free -h 2>/dev/null | awk '/Mem:/ {print $3 " / " $2}')"
-[ -z "$RAM" ] && RAM="всё пропито"
+[ -z "$RAM" ] && RAM="3.2G / 16G"
 SWAP="$(free -h 2>/dev/null | awk '/Swap:/ {print $3}')"
+[ -z "$SWAP" ] && SWAP="0B"
 
 cat << EOF
-${C_RED}         ===|===>------------.      ${C_PURPLE}${USER}${C_RESET}@${C_RED}${HOST}${C_RESET}
-${C_GRAY}        /   |                |      ${C_GRAY}----------------------------------------${C_RESET}
-${C_GRAY}       | [###]               |      ${C_YELLOW}Дистрибутив:${C_RESET}   ChepetskOS (Toxic Krokodil Core)
-${C_GRAY}       | [###]               |      ${C_YELLOW}Локация:${C_RESET}       Подъезд на Боёво (лампочка разбита)
-${C_RED}        \___|________________/      ${C_YELLOW}Состояние:${C_RESET}     ${C_RED}Ломка 3-й степени + жуткий сушняк${C_RESET}
-${C_GRAY}            |                       ${C_YELLOW}Атмосфера:${C_RESET}     14.8 ПДК аммиака КЧХК, синий туман
-${C_GRAY}         .-' '-.                    ${C_YELLOW}Запой:${C_RESET}         ${UPTIME}
-${C_GRAY}        /  777  \\                   ${C_YELLOW}Печень (RAM):${C_RESET}  ${RAM}
-${C_GRAY}       | ФУНФЫРЬ |                  ${C_YELLOW}Ломбард (SWAP):${C_RESET}${SWAP} заложено до получки
-${C_GRAY}       |_________|                  ${C_YELLOW}Оболочка:${C_RESET}      gopsh (понятия 1998)
-${C_RED}   [ ОСТОРОЖНО: ВЫБРОС ]${C_RESET}            ${C_YELLOW}Крыша:${C_RESET}         Участковый Михалыч за сотку
+${C_GRAY}       (===)         ${C_PURPLE}${USER}${C_RESET}@${C_RED}${HOST}${C_RESET}
+${C_GRAY}        | |          ${C_GRAY}----------------------------------------${C_RESET}
+${C_GRAY}     .--|_|--.       ${C_YELLOW}Дистрибутив:${C_RESET}   ChepetskOS (Toxic Krokodil Core)
+${C_CYAN}    /  =====  \\      ${C_YELLOW}Локация:${C_RESET}       Подъезд на Боёво 
+${C_CYAN}    |  | : |  |      ${C_YELLOW}Состояние:${C_RESET}     ${C_RED}Ломка 3-й степени + жуткий сушняк${C_RESET}
+${C_CYAN}    |  | 5 |  |      ${C_YELLOW}Атмосфера:${C_RESET}     14.8 ПДК аммиака КЧХК
+${C_CYAN}    |  | : |  |      ${C_YELLOW}Запой:${C_RESET}         ${UPTIME} 
+${C_CYAN}    |  | 3 |  |      ${C_YELLOW}Печень (RAM):${C_RESET}  ${RAM}
+${C_RED}    |  |===|  |      ${C_YELLOW}Ломбард (SWAP):${C_RESET}${SWAP} заложено до получки
+${C_RED}    |  |###|  |      ${C_YELLOW}Оболочка:${C_RESET}      gopsh (понятия 1998)
+${C_CYAN}    \\___   ___/      ${C_YELLOW}Крыша:${C_RESET}         Участковый Михалыч 
+${C_GRAY}        | |          
+${C_GRAY}         |           
+${C_GRAY}         |           
+${C_RED}         '           
+${C_RED}         *           
 EOF

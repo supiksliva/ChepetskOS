@@ -16,6 +16,7 @@ rm -f /usr/local/bin/nalivayka
 rm -f /usr/local/bin/lomkatop
 rm -f /usr/local/bin/detect-trezvost
 rm -f /usr/local/bin/krokodil-killer
+rm -f /usr/local/bin/krokodil-av
 
 rm -f /etc/profile.d/chepetsk.sh
 rm -f /hata /pomoyka /ponyatiya /dev/reka-cheptsa

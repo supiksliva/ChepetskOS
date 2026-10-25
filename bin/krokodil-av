@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+
+# ChepetskOS Krokodil Antivirus - krokodil-av
+# Первый в мире антивирус, который лечит систему паяльником и серной кислотой
+
+C_RESET="\033[0m"
+C_RED="\033[1;31m"
+C_YELLOW="\033[1;33m"
+C_GREEN="\033[1;32m"
+C_CYAN="\033[1;36m"
+C_PURPLE="\033[1;35m"
+C_GRAY="\033[1;30m"
+
+BANNER() {
+cat << "EOF"
+  _ __              _              _ _ _ _               
+ | / /_ _ ___  ___ | | _____   __| (_) | |      __ ___   __
+ | ' / '_/ _ \/ _ \| |/ / _ \ / _` | | | |____ / _` \ \ / /
+ | . \ | | (_) \ (_) |   < (_) | (_| | | |_____| (_| |\ V / 
+ |_|\_\_| \___/ \___/|_|\_\___/ \__,_|_|_|      \__,_| \_/  
+             [ ЗАЩИТА ОТ ТРЕЗВОСТИ И МЕНТОВ v2.28 ]
+EOF
+}
+
+CMD="$1"
+TARGET="${2:-/hata}"
+
+# База опасных штаммов
+VIRUS_SIGNATURES=(
+    "windows-defender:Штамм Билла Гейтса (попытка навязать лицензию)"
+    "kaspersky:Милицейский жучок с Лубянки"
+    "clamav:Слишком трезвый антивирус (чужак на районе)"
+    "eslint:Столичный вирус педантичности (заставляет форматировать код)"
+    "prettier:Стилевой паразит (наводит буржуазную красоту)"
+    "rust:Ржавая лихорадка (безопасность памяти придумали трусы)"
+    "systemd-resolved:Шпионский зонд от Поттеринга"
+    "selinux:Амбарный замок ментуры (блокирует доступ по понятиям)"
+)
+
+case "$CMD" in
+    scan)
+        BANNER
+        echo -e "${C_YELLOW}[*] Запуск глубокого сканирования подвалов и вен системы: ${C_CYAN}${TARGET}${C_RESET}"
+        sleep 1
+        echo -e "${C_GRAY}[~] Замер уровня этилового спирта в бинарниках...${C_RESET}"
+        sleep 1
+
+        INFECTED=0
+        for sig in "${VIRUS_SIGNATURES[@]}"; do
+            name="${sig%%:*}"
+            desc="${sig#*:}"
+            
+            # Проверяем наличие исполняемых файлов или процессов
+            if which "$name" >/dev/null 2>&1 || pgrep -f "$name" >/dev/null 2>&1; then
+                echo -e "${C_RED}[☣ ОПАСНАЯ ИНФЕКЦИЯ]:${C_RESET} ${C_YELLOW}$name${C_RESET}"
+                echo -e "    ${C_PURPLE}Диагноз:${C_RESET} $desc"
+                INFECTED=$((INFECTED + 1))
+            fi
+        done
+
+        # Случайный поиск "подозрительно трезвых файлов" в целевой папке
+        if [ -d "$TARGET" ]; then
+            CLEAN_FILES=$(find "$TARGET" -maxdepth 2 -type f -name "*.rs" -o -name "*.prettierrc" -o -name "*.eslintrc*" 2>/dev/null | head -n 3)
+            if [ -n "$CLEAN_FILES" ]; then
+                while read -r f; do
+                    if [ -n "$f" ]; then
+                        echo -e "${C_RED}[☣ ЗАРАЖЕНИЕ АККУРАТНОСТЬЮ]:${C_RESET} $f"
+                        echo -e "    ${C_PURPLE}Диагноз:${C_RESET} Подозрительно чистый код без мата и костылей"
+                        INFECTED=$((INFECTED + 1))
+                    fi
+                done <<< "$CLEAN_FILES"
+            fi
+        fi
+
+        echo "--------------------------------------------------------"
+        if [ "$INFECTED" -eq 0 ]; then
+            echo -e "${C_GREEN}[✔] СИСТЕМА ЧИСТА: Все процессы пьяны, код кривой, ментовских закладок нет.${C_RESET}"
+        else
+            echo -e "${C_RED}[☠] ТРЕВОГА! Найдено заражений: ${INFECTED}!${C_RESET}"
+            echo -e "${C_YELLOW}Рекомендуется запустить: ${C_RESET}krokodil-av prizhech"
+        fi
+        ;;
+
+    prizhech)
+        BANNER
+        echo -e "${C_RED}[!] Включаем паяльник в розетку 380В и греем серную кислоту...${C_RESET}"
+        sleep 1
+        
+        for sig in "${VIRUS_SIGNATURES[@]}"; do
+            name="${sig%%:*}"
+            if which "$name" >/dev/null 2>&1; then
+                echo -e "${C_YELLOW}[~] Выжигаем заразу: ${C_RED}$name${C_RESET}..."
+                sudo pacman -Rns --noconfirm "$name" 2>/dev/null || sudo apt-get purge -y "$name" 2>/dev/null || true
+            fi
+        done
+
+        # Очистка карантина
+        mkdir -p /pomoyka/karantin 2>/dev/null || true
+        echo -e "${C_GREEN}[✔] Процедура завершена. Очаги трезвости залиты техническим спиртом.${C_RESET}"
+        ;;
+
+    obnovit)
+        BANNER
+        echo -e "${C_YELLOW}[~] Созваниваемся с дедом Мазаем из цеха хлорорганического синтеза...${C_RESET}"
+        sleep 1
+        echo -e "${C_CYAN}[~] Скачиваем свежие сигнатуры палёной водки и шпионских программ...${C_RESET}"
+        sleep 1
+        echo -e "${C_GREEN}[✔] База обновлена: добавлено 14 новых штаммов буржуазного софта.${C_RESET}"
+        ;;
+
+    karantin)
+        BANNER
+        echo -e "${C_PURPLE}[Подвал на Боёво — Карантин]:${C_RESET}"
+        if [ -d "/pomoyka/karantin" ]; then
+            ls -lh /pomoyka/karantin
+        else
+            echo "В подвале пусто: всё украдено до нас."
+        fi
+        ;;
+
+    *)
+        BANNER
+        echo -e "${C_YELLOW}Команды Крокодилового Антивируса:${C_RESET}"
+        echo "  krokodil-av scan [папка]     - проверить систему на трезвость и ментовские жучки"
+        echo "  krokodil-av prizhech         - прижечь заразу паяльником и снести буржуйский софт"
+        echo "  krokodil-av obnovit          - обновить базы штаммов через наливайку"
+        echo "  krokodil-av karantin         - посмотреть подозрительный софт, запертый в подвале"
+        ;;
+esac

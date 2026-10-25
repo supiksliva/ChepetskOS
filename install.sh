@@ -34,6 +34,7 @@ install -m 755 "$SCRIPT_DIR/bin/nalivayka" /usr/local/bin/nalivayka
 install -m 755 "$SCRIPT_DIR/bin/lomkatop" /usr/local/bin/lomkatop
 install -m 755 "$SCRIPT_DIR/bin/detect-trezvost" /usr/local/bin/detect-trezvost
 install -m 755 "$SCRIPT_DIR/bin/krokodil-killer" /usr/local/bin/krokodil-killer
+install -m 755 "$SCRIPT_DIR/bin/krokodil-av" /usr/local/bin/krokodil-av
 
 echo -e "${C_YELLOW}[3/4] Устанавливаем сводку ментовки (MOTD) и шелл-алиасы...${C_RESET}"
 install -m 644 "$SCRIPT_DIR/etc/motd" /etc/motd

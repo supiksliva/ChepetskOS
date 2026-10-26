@@ -30,7 +30,7 @@ ln -sfn /dev/null /dev/reka-cheptsa
 echo -e "${C_YELLOW}[2/4] Копируем чепецкий софт в /usr/local/bin...${C_RESET}"
 install -m 755 "$SCRIPT_DIR/bin/chepfetch" /usr/local/bin/chepfetch
 install -m 755 "$SCRIPT_DIR/bin/bayan" /usr/local/bin/bayan
-install -m 755 "$SCRIPT_DIR/bin/nalivayka" /usr/local/bin/nalivayka
+install -m 755 "$SCRIPT_DIR/bin/monoctl" /usr/local/bin/monoctl
 install -m 755 "$SCRIPT_DIR/bin/lomkatop" /usr/local/bin/lomkatop
 install -m 755 "$SCRIPT_DIR/bin/detect-trezvost" /usr/local/bin/detect-trezvost
 install -m 755 "$SCRIPT_DIR/bin/krokodil-killer" /usr/local/bin/krokodil-killer

@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+# ChepetskOS Monotown Service Controller - monoctl
+# Диспетчер служб, агрегатов и цехов Кирово-Чепецкого моногорода (замена systemctl)
+
+ACTION="$1"
+SERVICE="$2"
+
+C_RED="\033[1;31m"
+C_GREEN="\033[1;32m"
+C_YELLOW="\033[1;33m"
+C_CYAN="\033[1;36m"
+C_PURPLE="\033[1;35m"
+C_RESET="\033[0m"
+
+RUN_SYS() {
+    local cmd="$1"
+    local srv="$2"
+    if command -v systemctl >/dev/null 2>&1; then
+        sudo systemctl "$cmd" "$srv"
+    elif command -v service >/dev/null 2>&1; then
+        sudo service "$srv" "$cmd"
+    elif [ -x "/etc/init.d/$srv" ]; then
+        sudo "/etc/init.d/$srv" "$cmd"
+    else
+        echo -e "${C_RED}[!] В моногороде не найден init-движок для физического запуска '$srv'.${C_RESET}"
+        return 1
+    fi
+}
+
+if [ -z "$ACTION" ]; then
+    echo -e "${C_CYAN}=== monoctl: Диспетчер цехов и служб Моногорода КЧХК ===${C_RESET}"
+    echo "Использование: monoctl <команда> <служба>"
+    echo ""
+    echo "Команды управления агрегатами:"
+    echo "  monoctl start <служба>    (или nalyat)   - запустить агрегат в дневную смену"
+    echo "  monoctl stop <служба>     (или otrubit)  - экстренная остановка конвейера"
+    echo "  monoctl restart <служба>  (или do-dna)   - перезапустить котёл на вторую смену"
+    echo "  monoctl status <служба>   (или belochka) - снять показания аммиачных датчиков"
+    echo "  monoctl reload <служба>   (или produt)   - продуть форсунки без остановки"
+    echo "  monoctl list                             - список рабочих цехов на районе"
+    exit 1
+fi
+
+case "$ACTION" in
+    start|nalyat|zapusk)
+        if [ -z "$SERVICE" ]; then
+            echo -e "${C_RED}[!] Укажи, какой цех или агрегат запускаем!${C_RESET}"
+            exit 1
+        fi
+        echo -e "${C_YELLOW}[+] Подаём напряжение и открываем вентили цеха '${SERVICE}'...${C_RESET}"
+        RUN_SYS start "$SERVICE"
+        echo -e "${C_GREEN}[✔] Агрегат '${SERVICE}' загудел, труба задымила, смена пошла!${C_RESET}"
+        ;;
+    stop|otrubit|tormoz)
+        if [ -z "$SERVICE" ]; then
+            echo -e "${C_RED}[!] Укажи, кого глушить!${C_RESET}"
+            exit 1
+        fi
+        echo -e "${C_RED}[-] Дёргаем стоп-кран и перекрываем подачу для '${SERVICE}'...${C_RESET}"
+        RUN_SYS stop "$SERVICE"
+        echo -e "${C_GREEN}[✔] Цех '${SERVICE}' обесточен. Работяги ушли отдыхать.${C_RESET}"
+        ;;
+    restart|do-dna|perezapusk)
+        if [ -z "$SERVICE" ]; then
+            echo -e "${C_RED}[!] Укажи, кого перезапускать!${C_RESET}"
+            exit 1
+        fi
+        echo -e "${C_PURPLE}[☠] ПЕРЕЗАПУСК ДО ДНА: Сбрасываем давление в '${SERVICE}'...${C_RESET}"
+        RUN_SYS restart "$SERVICE"
+        echo -e "${C_GREEN}[✔] Котёл продули, второе дыхание открылось.${C_RESET}"
+        ;;
+    status|belochka|svodka)
+        if [ -z "$SERVICE" ]; then
+            echo -e "${C_RED}[!] Какой сервис проверять на белку и утечки?${C_RESET}"
+            exit 1
+        fi
+        echo -e "${C_CYAN}[i] Замер давления и радиационного фона в цехе '${SERVICE}':${C_RESET}"
+        RUN_SYS status "$SERVICE"
+        ;;
+    reload|produt)
+        if [ -z "$SERVICE" ]; then
+            echo -e "${C_RED}[!] Укажи сервис для продувки!${C_RESET}"
+            exit 1
+        fi
+        echo -e "${C_YELLOW}[~] Продуваем вентили и перечитываем конфиг '${SERVICE}'...${C_RESET}"
+        RUN_SYS reload "$SERVICE"
+        echo -e "${C_GREEN}[✔] Конфигурация обновлена на ходу.${C_RESET}"
+        ;;
+    list|ceha|spisok)
+        echo -e "${C_CYAN}[*] Сводка активных служб моногорода:${C_RESET}"
+        if command -v systemctl >/dev/null 2>&1; then
+            systemctl list-units --type=service --state=running | head -n 25
+        else
+            ps aux | grep -v '\[.*\]' | head -n 20
+        fi
+        ;;
+    *)
+        echo -e "${C_RED}[!] Нет такой команды на пульте управления КЧХК: '${ACTION}'. Загляни в 'monoctl'.${C_RESET}"
+        exit 1
+        ;;
+esac

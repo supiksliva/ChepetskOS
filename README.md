@@ -43,13 +43,14 @@ bayan lomka             # Накатить все обновления сист�
 bayan shmon python      # Пошустрить в поисках стаффа
 ```
 
-### 2. Менеджер служб `nalivayka`
-Заменяет скучный `systemctl`. Службы живут по понятиям рюмочной:
+### 2. Диспетчер служб моногорода `monoctl`
+Заменяет скучный буржуйский `systemctl`. Управляет агрегатами, службами и цехами комбината:
 ```bash
-nalivayka nalyat docker     # Запустить службу (налить 150г боярышника)
-nalivayka otrubit docker    # Остановить службу (дать с ноги по печени)
-nalivayka belochka docker   # Проверить статус службы на белку
-nalivayka do-dna docker     # Перезапуск службы (опрокинуть залпом)
+monoctl start docker        # Запустить цех в дневную смену (или 'monoctl nalyat')
+monoctl stop docker         # Экстренно остановить конвейер (или 'monoctl otrubit')
+monoctl status docker       # Снять показания аммиачных датчиков (или 'monoctl belochka')
+monoctl restart docker      # Перезапустить котёл на вторую смену (или 'monoctl do-dna')
+monoctl list                # Сводка активных цехов и агрегатов на районе
 ```
 
 ### 3. Системный информер `chepfetch`

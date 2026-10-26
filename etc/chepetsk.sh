@@ -23,6 +23,8 @@ alias krysha="sudo"
 alias pereдоз="kill -9"
 alias v_otkluchku="shutdown -h now"
 alias s_boduna="reboot"
+alias systemctl="monoctl"
+alias nalivayka="monoctl"
 
 # Кастомный промпт (PS1): [КУМАРЫ: <load>] юзер@подъезд:путь $
 export PS1="\[\033[1;31m\][КУМАРЫ: \$(cat /proc/loadavg 2>/dev/null | cut -d' ' -f1)] \[\033[1;33m\]\u\[\033[0m\]@\[\033[1;35m\]подъезд:\[\033[1;36m\]\w\[\033[0m\] \$ "

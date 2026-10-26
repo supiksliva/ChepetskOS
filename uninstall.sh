@@ -12,6 +12,7 @@ echo -e "\033[1;33m[~] Принудительная госпитализация
 
 rm -f /usr/local/bin/chepfetch
 rm -f /usr/local/bin/bayan
+rm -f /usr/local/bin/monoctl
 rm -f /usr/local/bin/nalivayka
 rm -f /usr/local/bin/lomkatop
 rm -f /usr/local/bin/detect-trezvost
